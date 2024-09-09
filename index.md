@@ -1,4 +1,3 @@
-Hello World
+This is my blog.
 
-# test blog
-[test link](./pages/2024_09_09_hp12_comma.md)
+[The Strange Case of The Rogue HP-12c](./pages/2024_09_09_hp12_comma.md)
