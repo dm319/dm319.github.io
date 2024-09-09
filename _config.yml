@@ -1,6 +1,6 @@
 lsi: false
 safe: true
-source: [your repo's top level directory]
+source: https://github.com/dm319/dm319.github.io
 incremental: false
 highlighter: rouge
 gist:
