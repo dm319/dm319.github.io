@@ -63,7 +63,7 @@ Differences start to be seen where solve-for-i gets harder.  On P4 it delivers a
 
 With these battery of tests, it is hard to judge overall whether it is more accurate than the HP-12C, or less.  Our overall assessment is that it performs less well.  Its mean accuracy rating is less (brought down by P7) despite it being superior to the HP-12C on 2 tests and inferior on one.  Median scores are the same, but overall the edge should go to the HP-12C, due to returning the correct sign on P7.
 
-#### Calculation Speed of the Rogue Zero
+### Calculation Speed of the Rogue Zero
 
 Accuracy aside, what was more noticeable to users was that the Rogue Zero could take a very long time when solving-for-i.  The original HP-12C underwent a processor upgrade in 2001 to the 3V NUT processor.  Consumer testing found there was distrust in the results returning too quickly, and so it appears that calculations were purposefully slowed down in order to meet consumer expectations of 'thinking time'[6,7].
 
@@ -91,7 +91,7 @@ The other Rogue landed almost exactly 20 years later.  Rogue One has some simila
 
 However, there are some key differences.  While the Rogue Zero may have been born out of the necessity to switch to a new processor, the Rogue One was not, and the reasons for the existence of the Rogue One remain unknown outside of HP to this day.  What is interesting is that while Rogue Zero was most deficient in speed, Rogue One excelled here failing on accuracy.  It appeared to not implement a ln(1+x) method, it did not catch the i=0 case, and it did not draw on hard-earned TVM solving knowledge.  It's 16-digit calculation engine could not compensate for these failings.
 
-#### The Flat-Rate Problem Reveals Inner Workings
+### The Flat-Rate Problem Reveals Inner Workings
 
 In i = 10%, PV = 100, PMT = -10, the loan is never paid off, with the balance owing at the end of time remaining -100.  This section refers to this specific TVM problem.
 
@@ -131,7 +131,7 @@ It's also worth noting here another difference between the HP-12c Platinum and t
 
 Another variation of the flat-rate problem can also be adapted as a solve-for-i.  If FV is set to 0, and N = 360, solve-for-i still returns 10% (the true answer being fractionally below this, but 10% being a reasonable answer here).  All calculators tested in this study will return 10%, except it uniquely fails for the Rogue Zero.
 
-#### Another One Enters the Fray
+### Another One Enters the Fray
 
 In testing more than 60 financial calculators[5], there was not a single example of two calculators from different manufacturers matching in their results.  That is until we tested the Rogue Zero, where its results matched almost exactly with the Victor V12.  The V12 was introduced in 2007 by the Victor Adding Company.  It is a landscape calculator, with the same button layout as the HP-12C.  In fact, it has the exact same layout as the HP-12c Platinum Rogue Zero: an algebraic option, no backspace or parentheses.  This strongly suggests that not only is the TVM solving algorithm and calculation engine shared, but also the user interface and features.  the Victor returned 10-digit results, with digit-for-digit identical results for all but P11.  We found the Victor V12 calculated roughly 3.5x faster than the Rogue Zero.
 
