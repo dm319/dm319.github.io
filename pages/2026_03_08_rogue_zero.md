@@ -97,7 +97,7 @@ In i = 10%, PV = 100, PMT = -10, the loan is never paid off, with the balance ow
 
 This problem can be solved forward for FV, incrementing N.  As you increment N, starting at lower values, transition points (TP) occur as the calculator fails to return -100, with this point likely dependent on both the available precision of the calculator, and the formula used to calculate FV.
 
-An interesting quirk of the HP calculators here is that there appears to be a sequence of returning -100, to -1000 (transition point TP1K), and then to 0 (TP0).
+An interesting quirk of the HP calculators is that there appears to be a sequence of returning -100, to -1000 (transition point TP1K), and then to 0 (TP0).
 
 The HP-12C TP1K is at N = 315, then TP0 at N = 339.  The HP-17BII TP1K is later at N = 363, with TP0 at N = 387.  This likely reflects their corresponding internal precision, but it was hard to understand why the -1000 transition occurred.
 
@@ -115,13 +115,13 @@ The HP-12C reflects a very similar pattern at a different scale.  TP1K occurs at
 
 The regular HP-12c Platinum demonstrates the same behaviour here as the HP-17BII, which strongly suggests it uses not only the same internal precision, but likely the same calculating platform.
 
-The Rogue Zero does not have a TP1K, instead returning correct results up until N = 387, where it returns 0.  This suggests that the Rogue Zero has a different calculation engine to the other HP calculators, using 16 digit precision and 16 digits to align on.
+The Rogue Zero does not have a TP1K, instead returning correct results up until N = 387, where it returns 0.  This suggests that the Rogue Zero has a different calculation engine to the other HP calculators, using 16 digit internal precision and 16 digits to align on.
 
 ![A possible formula to calculate FV for the Rogue One.](../media/formula_c.png)
 
-Interestingly, the Rogue One continues to return -100 all the way to N = 1e99.  It is likely the Rogue One is using a solve-for-FV formula which isolates (PMT/i), allowing it to continue to return results despite the other term becoming 0.
+Interestingly, the Rogue One continues to return -100 all the way to N = 1e99.  It is likely the Rogue One is using a solve-for-FV formula which isolates (PMT/i), allowing it to continue returning results despite the other term becoming 0.
 
-As the N value is pushed even further, we find the HP-12C continues to return 0.  The HP-12C internal precision likely has the same exponent maximum as external precision, of 99, and this would normally be breached when N = 2416.  However, an overflow doesn't occur at this point on the HP-12C.  The HP-12C continues to return 0 up to N=1e99, which implies that overflow is ignored in this calculation, likely using the value of 9.999999999e99.  It is not clear what the Rogue Zero internal exponent range is, but given it also returns values up to N = 1e99, it suggests it similarly ignores overflows in this calculation.
+As the N value is pushed even further, we find the HP-12C continues to return 0.  The HP-12C internal precision likely has the same exponent maximum as external precision, of 99, and this would normally be breached when N = 2416.  However, an overflow doesn't occur at this point on the HP-12C.  The HP-12C continues to return 0 up to N = 1e99, which implies that overflow is ignored in this calculation, likely using the value of 9.999999999e99.  It is not clear what the Rogue Zero internal exponent range is, but given it also returns values up to N = 1e99, it suggests it similarly ignores overflows in this calculation.
 
 This is not the case with the HP-12c Platinum, where at N=314762, the 0 transitions to 9.999999999e99, representing the overflow value of an HP-12C.  At this point, N x LN(1.1) is 30,000.02, suggesting N x LN(i+1) is limited to <30,000.  Interestingly, the HP-17BII overflows at a later value of 483178, throwing an "ERROR: OVERFLOW".  This coincidently is where F is 1.08e20000, and equates to where N x LN(i+1) is 46,051.7.  This value of F should not overflow the internal precision of the Saturn (which uses 20 bits in 10's complement format), and is likely a coded limit within the algorithm which triggers overflow when N x LN(i+1) > 46,051.7.  It would seem like this value was reduced to 30,000 in the port to the HP-12c Platinum.
 
@@ -162,13 +162,13 @@ I suspect that HP needed to move off their legacy NUT chip, which was manufactur
 
 HP could not use the original HP-12C code, as this had gone missing.  This left it in a difficult situation, and so to salvage the HP-12c Platinum, they used the HP-17BII+ code.  The original Saturn TVM code (presumably originating on the HP-18C) had been ported to C[12], allowing the calculation engine and algorithms to be compiled for the 6502 chip.
 
-The HP-12c Platinum was not just a Saturn-era financial calculator in a Voyager shape, as there were a number of changes in the port.  The solve-for-i algorithm was not copied across.  The Saturn TVM code, at times, did not quite match the HP-12C (P7), and the HP-12c Platinum's solve-for-i code behaves closer to the HP-12C.  Other changes include the 2 digit exponent, returning an integer for solve-for-N, and retaining the same overflow behaviour as the Voyagers.
+The HP-12c Platinum was not just a Saturn-era financial calculator in a Voyager shape, as there were a number of changes in the port.  The solve-for-i algorithm was not copied across.  The Saturn TVM code, at times, did not quite match the HP-12C (P7), and the HP-12c Platinum's solve-for-i code behaves closer to the HP-12C.  Other changes include the 2 digit exponent, returning an integer for solve-for-N, and retaining the same calculation overflow behaviour as the Voyagers, but retaining an internal overflow check at a different value to the Saturn code.
 
 Even though the revised HP-12c Platinum exceeded the HP-12C in all metrics measured in this study, at this point the damage was done.  The HP-12C was eventually ported to the ARM platform by running the original code on a NUT emulator, and rather than being replaced, was sold in parallel with the HP-12c Platinum.  This provided a welcome speed boost to the original HP-12C, while retaining the exact same digit-for-digit behaviour.  (In the same manner as its forebears, it is now the HP-12c Platinum which needs to be ported to a new hardware platform as 6502-based chip designs are pushed out of the market by the ARM juggernaut.)
 
 The flat-rate problem gave us a small window into what is happening internally.  It would be interesting to confirm whether subtraction really does align using the full width of the registers, allowing 1 digit over the internal precision.  The TVM results and the flat-rate characteristics strongly suggest the regular HP-12c Platinum runs on the Saturn calculating engine, and likely uses their algebraic TVM algorithms too.
 
-Strangely enough, if it wasn't for the Rogue Zero, we may not still have the HP-12C in its current form today, as the longest produced calculator in history.  And while the switch from NUT to ARM in the HP-12C allowed it to continue, it likely set up the circumstances for the Rogue One, turning again to the 6502 as a way to reduce manufacturing costs.
+Strangely enough, if it wasn't for the Rogue Zero, we may not have the HP-12C today, as the longest produced calculator in history.  And while the switch from NUT to ARM allowed the HP-12C line to continue, it likely set up the circumstances for the Rogue One, turning again to the 6502 as a way to reduce manufacturing costs.
 
 And so it is that HP-12C calculators have been found to have four different TVM solvers.  Only the very earliest HP-12c Platinum demonstrated (minor) TVM and (major) speed issues.  Yet discussions around the HP-12c Platinum often express concern that the solving is suboptimal - this can be put to bed, as HP-12c Platinums featuring parentheses (the vast majority) offer superior solving to even the HP-12C.  The Rogue Zero, while short-lived, appeared to live on as the Victor V12.  We weren't able to find any reference to Victor outsourcing their calculators to Kinpo, or even if the V12 ran a 6502 processor, however we suspect both of these to be the case.
 
