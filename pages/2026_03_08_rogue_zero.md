@@ -1,5 +1,7 @@
 # Rogue Zero: An HP-12c Story
 
+2026-03-08
+
 ## By dm319 and Tony Hutchins
 
 ![The Rogue Zero, courtesy of Tony Hutchins and family.](../media/HPPlat12Cb.JPG)
